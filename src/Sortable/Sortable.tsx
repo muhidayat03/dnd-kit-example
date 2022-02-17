@@ -106,15 +106,16 @@ export function Sortable({ itemCount = 16, isDisabled = () => false }: Props) {
         console.log("cancel");
       }}
     >
-      <Wrapper center>
-        <SortableContext items={items} strategy={verticalListSortingStrategy}>
-          <ul>
+      <SortableContext items={items} strategy={verticalListSortingStrategy}>
+        <div style={{ width: 400, margin: "auto", padding: 100 }}>
+          <ul style={{ margin: 0, padding: 0 }}>
             {items.map((value, index) => (
               <SortableItem key={value} id={value} index={index} />
             ))}
           </ul>
-        </SortableContext>
-      </Wrapper>
+        </div>
+      </SortableContext>
+
       {createPortal(
         <DragOverlay dropAnimation={defaultDropAnimationConfig}>
           {activeId ? <Item value={items[activeIndex]} dragOverlay /> : null}

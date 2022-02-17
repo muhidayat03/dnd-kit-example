@@ -1,3 +1,3 @@
-export { Item, Action, Handle, Remove } from "./Item";
+export { Item } from "./Item";
 
 export { Wrapper } from "./Wrapper";

@@ -3,14 +3,11 @@ import classNames from "classnames";
 import type { DraggableSyntheticListeners } from "@dnd-kit/core";
 import type { Transform } from "@dnd-kit/utilities";
 
-import { Handle, Remove } from "./components";
-
 import styles from "./Item.module.scss";
 
 export interface Props {
   dragOverlay?: boolean;
   dragging?: boolean;
-  handle?: boolean;
   height?: number;
   index?: number;
   fadeIn?: boolean;
@@ -29,7 +26,6 @@ export const Item = React.memo(
         dragOverlay,
         dragging,
         fadeIn,
-        handle,
         height,
         index,
         listeners,
@@ -85,18 +81,14 @@ export const Item = React.memo(
             className={classNames(
               styles.Item,
               dragging && styles.dragging,
-              handle && styles.withHandle,
               dragOverlay && styles.dragOverlay
             )}
             data-cypress="draggable-item"
-            {...(!handle ? listeners : undefined)}
+            {...listeners}
             {...props}
-            tabIndex={!handle ? 0 : undefined}
+            tabIndex={0}
           >
             {value}
-            <span className={styles.Actions}>
-              {handle ? <Handle {...listeners} /> : null}
-            </span>
           </div>
         </li>
       );
