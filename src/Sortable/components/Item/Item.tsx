@@ -9,7 +9,6 @@ import styles from "./Item.module.scss";
 
 export interface Props {
   dragOverlay?: boolean;
-  disabled?: boolean;
   dragging?: boolean;
   handle?: boolean;
   height?: number;
@@ -18,7 +17,6 @@ export interface Props {
   transform?: Transform | null;
   listeners?: DraggableSyntheticListeners;
   sorting?: boolean;
-  style?: React.CSSProperties;
   transition?: string | null;
   wrapperStyle?: React.CSSProperties;
   value: React.ReactNode;
@@ -30,18 +28,15 @@ export const Item = React.memo(
       {
         dragOverlay,
         dragging,
-        disabled,
         fadeIn,
         handle,
         height,
         index,
         listeners,
         sorting,
-        style,
         transition,
         transform,
         value,
-        wrapperStyle,
         ...props
       },
       ref
@@ -68,10 +63,7 @@ export const Item = React.memo(
           )}
           style={
             {
-              ...wrapperStyle,
-              transition: [transition, wrapperStyle?.transition]
-                .filter(Boolean)
-                .join(", "),
+              transition: [transition].filter(Boolean).join(", "),
               "--translate-x": transform
                 ? `${Math.round(transform.x)}px`
                 : undefined,
@@ -94,10 +86,8 @@ export const Item = React.memo(
               styles.Item,
               dragging && styles.dragging,
               handle && styles.withHandle,
-              dragOverlay && styles.dragOverlay,
-              disabled && styles.disabled
+              dragOverlay && styles.dragOverlay
             )}
-            style={style}
             data-cypress="draggable-item"
             {...(!handle ? listeners : undefined)}
             {...props}
