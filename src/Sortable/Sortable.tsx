@@ -9,7 +9,6 @@ import {
   defaultDropAnimation,
   MouseSensor,
   TouchSensor,
-  UniqueIdentifier,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -20,8 +19,8 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import { createRange } from "./utilities";
 import { Item } from "./Item";
+import { createRange } from "./createRange";
 
 export interface Props {
   itemCount?: number;
