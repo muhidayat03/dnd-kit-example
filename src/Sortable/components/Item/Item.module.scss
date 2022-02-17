@@ -44,8 +44,7 @@ $focused-outline-color: #4c9ffe;
   &.dragOverlay {
     --scale: 1.05;
     --box-shadow: $box-shadow;
-    --box-shadow-picked-up: $box-shadow-border,
-      -1px 0 15px 0 rgba(34, 33, 81, 0.01),
+    --box-shadow-picked-up: -1px 0 15px 0 rgba(34, 33, 81, 0.01),
       0px 15px 15px 0 rgba(34, 33, 81, 0.25);
     z-index: 999;
   }
@@ -109,7 +108,6 @@ $focused-outline-color: #4c9ffe;
     transform: scale(var(--scale));
     box-shadow: var(--box-shadow-picked-up);
     opacity: 1;
-    background: "red";
   }
 
   &.color:before {

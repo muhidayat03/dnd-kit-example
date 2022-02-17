@@ -22,7 +22,6 @@ export interface Props {
   transition?: string | null;
   wrapperStyle?: React.CSSProperties;
   value: React.ReactNode;
-  onRemove?(): void;
 }
 
 export const Item = React.memo(
@@ -37,7 +36,6 @@ export const Item = React.memo(
         height,
         index,
         listeners,
-        onRemove,
         sorting,
         style,
         transition,
@@ -107,9 +105,6 @@ export const Item = React.memo(
           >
             {value}
             <span className={styles.Actions}>
-              {onRemove ? (
-                <Remove className={styles.Remove} onClick={onRemove} />
-              ) : null}
               {handle ? <Handle {...listeners} /> : null}
             </span>
           </div>

@@ -10,7 +10,6 @@ import {
   DropAnimation,
   defaultDropAnimation,
   KeyboardCoordinateGetter,
-  Modifiers,
   MouseSensor,
   MeasuringConfiguration,
   PointerActivationConstraint,
@@ -24,10 +23,9 @@ import {
   arrayMove,
   useSortable,
   SortableContext,
-  SortingStrategy,
-  rectSortingStrategy,
   AnimateLayoutChanges,
   NewIndexGetter,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
 import { createRange } from "./utilities";
@@ -36,7 +34,6 @@ import { Item, Wrapper } from "./components";
 export interface Props {
   activationConstraint?: PointerActivationConstraint;
   animateLayoutChanges?: AnimateLayoutChanges;
-  adjustScale?: boolean;
   collisionDetection?: CollisionDetection;
   coordinateGetter?: KeyboardCoordinateGetter;
   dropAnimation?: DropAnimation | null;
@@ -44,11 +41,7 @@ export interface Props {
   handle?: boolean;
   itemCount?: number;
   items?: string[];
-  measuring?: MeasuringConfiguration;
-  modifiers?: Modifiers;
-  removable?: boolean;
   reorderItems?: typeof arrayMove;
-  strategy?: SortingStrategy;
   isDisabled?(id: UniqueIdentifier): boolean;
 }
 
@@ -64,11 +57,13 @@ const screenReaderInstructions: ScreenReaderInstructions = {
     Press space again to drop the item in its new position, or press escape to cancel.
   `,
 };
+const activationConstraint = {
+  delay: 250,
+  tolerance: 5,
+};
 
 export function Sortable({
-  activationConstraint,
   animateLayoutChanges,
-  adjustScale = false,
   collisionDetection = closestCenter,
   dropAnimation = defaultDropAnimationConfig,
   getNewIndex,
@@ -76,11 +71,7 @@ export function Sortable({
   itemCount = 16,
   items: initialItems,
   isDisabled = () => false,
-  measuring,
-  modifiers,
-  removable,
   reorderItems = arrayMove,
-  strategy = rectSortingStrategy,
 }: Props) {
   const [items, setItems] = useState<string[]>(
     () =>
@@ -100,9 +91,6 @@ export function Sortable({
   const getIndex = items.indexOf.bind(items);
   const getPosition = (id: string) => getIndex(id) + 1;
   const activeIndex = activeId ? getIndex(activeId) : -1;
-  const handleRemove = removable
-    ? (id: string) => setItems((items) => items.filter((item) => item !== id))
-    : undefined;
   const announcements: Announcements = {
     onDragStart(id) {
       return `Picked up sortable item ${id}. Sortable item ${id} is in position ${getPosition(
@@ -172,11 +160,9 @@ export function Sortable({
         }
       }}
       onDragCancel={() => setActiveId(null)}
-      measuring={measuring}
-      modifiers={modifiers}
     >
       <Wrapper center>
-        <SortableContext items={items} strategy={strategy}>
+        <SortableContext items={items} strategy={verticalListSortingStrategy}>
           <ul>
             {items.map((value, index) => (
               <SortableItem
@@ -185,7 +171,6 @@ export function Sortable({
                 handle={handle}
                 index={index}
                 disabled={isDisabled(value)}
-                onRemove={handleRemove}
                 animateLayoutChanges={animateLayoutChanges}
                 getNewIndex={getNewIndex}
               />
@@ -194,7 +179,7 @@ export function Sortable({
         </SortableContext>
       </Wrapper>
       {createPortal(
-        <DragOverlay adjustScale={adjustScale} dropAnimation={dropAnimation}>
+        <DragOverlay dropAnimation={dropAnimation}>
           {activeId ? (
             <Item value={items[activeIndex]} handle={handle} dragOverlay />
           ) : null}
@@ -248,7 +233,6 @@ export function SortableItem({
       sorting={isSorting}
       handle={handle}
       index={index}
-      onRemove={onRemove ? () => onRemove(id) : undefined}
       transform={transform}
       transition={transition}
       listeners={listeners}

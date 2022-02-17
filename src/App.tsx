@@ -1,22 +1,7 @@
-import { verticalListSortingStrategy } from "@dnd-kit/sortable";
-
-import { Sortable, Props as SortableProps } from "./Sortable/Sortable";
-
-const props: Partial<SortableProps> = {
-  strategy: verticalListSortingStrategy,
-  itemCount: 10,
-};
+import { Sortable } from "./Sortable/Sortable";
 
 function App() {
-  return (
-    <Sortable
-      {...props}
-      activationConstraint={{
-        delay: 250,
-        tolerance: 5,
-      }}
-    />
-  );
+  return <Sortable />;
 }
 
 export default App;
