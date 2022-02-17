@@ -9,7 +9,6 @@ import styles from "./Item.module.scss";
 
 export interface Props {
   dragOverlay?: boolean;
-  color?: string;
   disabled?: boolean;
   dragging?: boolean;
   handle?: boolean;
@@ -24,26 +23,12 @@ export interface Props {
   wrapperStyle?: React.CSSProperties;
   value: React.ReactNode;
   onRemove?(): void;
-  renderItem?(args: {
-    dragOverlay: boolean;
-    dragging: boolean;
-    sorting: boolean;
-    index: number | undefined;
-    fadeIn: boolean;
-    listeners: DraggableSyntheticListeners;
-    ref: React.Ref<HTMLElement>;
-    style: React.CSSProperties | undefined;
-    transform: Props["transform"];
-    transition: Props["transition"];
-    value: Props["value"];
-  }): React.ReactElement;
 }
 
 export const Item = React.memo(
   React.forwardRef<HTMLLIElement, Props>(
     (
       {
-        color,
         dragOverlay,
         dragging,
         disabled,
@@ -53,7 +38,6 @@ export const Item = React.memo(
         index,
         listeners,
         onRemove,
-        renderItem,
         sorting,
         style,
         transition,
@@ -65,7 +49,7 @@ export const Item = React.memo(
       ref
     ) => {
       useEffect(() => {
-        if (!dragOverlay) {
+        if (!dragging) {
           return;
         }
 
@@ -74,23 +58,9 @@ export const Item = React.memo(
         return () => {
           document.body.style.cursor = "";
         };
-      }, [dragOverlay]);
+      }, [dragging]);
 
-      return renderItem ? (
-        renderItem({
-          dragOverlay: Boolean(dragOverlay),
-          dragging: Boolean(dragging),
-          sorting: Boolean(sorting),
-          index,
-          fadeIn: Boolean(fadeIn),
-          listeners,
-          ref,
-          style,
-          transform,
-          transition,
-          value,
-        })
-      ) : (
+      return (
         <li
           className={classNames(
             styles.Wrapper,
@@ -117,7 +87,6 @@ export const Item = React.memo(
                 ? `${transform.scaleY}`
                 : undefined,
               "--index": index,
-              "--color": color,
             } as React.CSSProperties
           }
           ref={ref}
@@ -128,8 +97,7 @@ export const Item = React.memo(
               dragging && styles.dragging,
               handle && styles.withHandle,
               dragOverlay && styles.dragOverlay,
-              disabled && styles.disabled,
-              color && styles.color
+              disabled && styles.disabled
             )}
             style={style}
             data-cypress="draggable-item"
